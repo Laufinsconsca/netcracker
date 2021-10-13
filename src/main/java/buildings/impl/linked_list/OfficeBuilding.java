@@ -1,10 +1,11 @@
 package buildings.impl.linked_list;
 
+import buildings.Building;
 import buildings.Floor;
 import buildings.Space;
-import buildings.Building;
 import exceptions.FloorIndexOutOfBoundsException;
 import exceptions.SpaceIndexOutOfBoundsException;
+
 import static sort.Sort.quickSort;
 
 public class OfficeBuilding implements Building {
@@ -61,10 +62,11 @@ public class OfficeBuilding implements Building {
         }
         return i;
     }
+
     @Override
     public int getNumberOfSpaces() {
         int numberOfOffices = 0;
-        Floor[] officeFloors = toArray();
+        Floor[] officeFloors = getFloorsArray();
         for (int i = 0; i < getNumberOfFloors(); i++) {
             numberOfOffices += officeFloors[i].getNumberOfSpaces();
         }
@@ -74,7 +76,7 @@ public class OfficeBuilding implements Building {
     @Override
     public double getTotalArea() {
         double totalArea = 0;
-        Floor[] officeFloors = toArray();
+        Floor[] officeFloors = getFloorsArray();
         for (int i = 0; i < getNumberOfFloors(); i++) {
             totalArea += officeFloors[i].getTotalArea();
         }
@@ -84,7 +86,7 @@ public class OfficeBuilding implements Building {
     @Override
     public int getNumberOfRooms() {
         int totalNumberOfRooms = 0;
-        Floor[] officeFloors = toArray();
+        Floor[] officeFloors = getFloorsArray();
         for (int i = 0; i < getNumberOfFloors(); i++) {
             totalNumberOfRooms += officeFloors[i].getNumberOfRooms();
         }
@@ -92,7 +94,7 @@ public class OfficeBuilding implements Building {
     }
 
     @Override
-    public Floor[] toArray() {
+    public Floor[] getFloorsArray() {
         if (head == null) {
             return new Floor[]{};
         }
@@ -138,9 +140,9 @@ public class OfficeBuilding implements Building {
     }
 
     @Override
-    public Space getSpace(int number){
+    public Space getSpace(int number) {
         int[] numbers = decomposeEndToEndNumber(number);
-        return toArray()[numbers[0]].getSpace(numbers[1]);
+        return getFloorsArray()[numbers[0]].getSpace(numbers[1]);
     }
 
     @Override
@@ -166,7 +168,7 @@ public class OfficeBuilding implements Building {
 
     @Override
     public Space getBestSpace() {
-        Floor[] floors = toArray();
+        Floor[] floors = getFloorsArray();
         double maxArea = 0;
         Space maxAreaOffice = null;
         for (int i = 0; i < getNumberOfFloors(); i++) {
@@ -180,12 +182,12 @@ public class OfficeBuilding implements Building {
     }
 
     @Override
-    public Space[] getSortedAreaArray(){
+    public Space[] getSortedAreaArray() {
         Space[] array = new Space[getNumberOfSpaces()];
         int i = 0;
-        Floor[] floors = toArray();
+        Floor[] floors = getFloorsArray();
         for (Floor floor : floors) {
-            Space[] spaces = floor.toArray();
+            Space[] spaces = floor.getSpacesArray();
             for (Space space : spaces) {
                 array[i++] = space.copy();
             }
@@ -194,7 +196,7 @@ public class OfficeBuilding implements Building {
         return array;
     }
 
-    private int[] decomposeEndToEndNumber(int number){
+    private int[] decomposeEndToEndNumber(int number) {
         if (number < 0) {
             throw new SpaceIndexOutOfBoundsException("Отрицательный номер офиса");
         } else if (number > getNumberOfSpaces()) {
@@ -202,7 +204,7 @@ public class OfficeBuilding implements Building {
         } else {
             int j = 0, k;
             int[] numbers = new int[2];
-            Floor[] floors = toArray();
+            Floor[] floors = getFloorsArray();
             for (int i = 0; i < floors.length; i++) {
                 k = j;
                 j += floors[i].getNumberOfSpaces();
@@ -216,8 +218,8 @@ public class OfficeBuilding implements Building {
         }
     }
 
-    public String toString(){
-        Floor[] floors = toArray();
+    public String toString() {
+        Floor[] floors = getFloorsArray();
         if (floors.length == 0) {
             return "Здание пусто";
         }
@@ -226,25 +228,6 @@ public class OfficeBuilding implements Building {
             builder.append(floors[i]).append("\n");
         }
         return builder.toString();
-    }
-
-    private static class Node {
-        private Floor floor;
-        Node next;
-        Node prev;
-
-        private Node() {
-        }
-
-        public static Node of(Floor floor) {
-            Node newNode = new Node();
-            newNode.floor = floor.copy();
-            return newNode;
-        }
-
-        public Floor getFloor() {
-            return floor;
-        }
     }
 
     private void addNode(int number, Node newNode) {
@@ -301,6 +284,25 @@ public class OfficeBuilding implements Building {
             if (number == 0) {
                 head = prev.next;
             }
+        }
+    }
+
+    private static class Node {
+        Node next;
+        Node prev;
+        private Floor floor;
+
+        private Node() {
+        }
+
+        public static Node of(Floor floor) {
+            Node newNode = new Node();
+            newNode.floor = floor.copy();
+            return newNode;
+        }
+
+        public Floor getFloor() {
+            return floor;
         }
     }
 }

@@ -49,7 +49,7 @@ public class OfficeFloor implements Floor {
     @Override
     public double getTotalArea() {
         double totalArea = 0;
-        Space[] offices = toArray();
+        Space[] offices = getSpacesArray();
         for (int i = 0; i < getNumberOfSpaces(); i++) {
             totalArea += offices[i].getArea();
         }
@@ -59,7 +59,7 @@ public class OfficeFloor implements Floor {
     @Override
     public int getNumberOfRooms() {
         int totalNumberOfRooms = 0;
-        Space[] offices = toArray();
+        Space[] offices = getSpacesArray();
         for (int i = 0; i < getNumberOfSpaces(); i++) {
             totalNumberOfRooms += offices[i].getNumberOfRooms();
         }
@@ -67,11 +67,11 @@ public class OfficeFloor implements Floor {
     }
 
     @Override
-    public Space[] toArray() {
+    public Space[] getSpacesArray() {
         if (head == null) {
-            return new Office[]{};
+            return new Space[]{};
         }
-        Space[] spaces = new Office[getNumberOfSpaces()];
+        Space[] spaces = new Space[getNumberOfSpaces()];
         Node temp = head;
         spaces[0] = temp.getSpace();
         for (int i = 1; i < getNumberOfSpaces(); i++) {
@@ -125,7 +125,7 @@ public class OfficeFloor implements Floor {
 
     @Override
     public Space getBestSpace() {
-        Space[] offices = toArray();
+        Space[] offices = getSpacesArray();
         double maxArea = 0;
         Space maxAreaOffice = null;
         for (int i = 0; i < getNumberOfSpaces(); i++) {
@@ -139,11 +139,11 @@ public class OfficeFloor implements Floor {
 
     @Override
     public Floor copy() {
-        return new OfficeFloor(toArray());
+        return new OfficeFloor(getSpacesArray());
     }
 
     public String toString() {
-        Space[] offices = toArray();
+        Space[] offices = getSpacesArray();
         if (offices.length == 0) {
             return "Этаж пуст";
         }
@@ -152,28 +152,6 @@ public class OfficeFloor implements Floor {
             builder.append(offices[i]).append(" ");
         }
         return builder.toString();
-    }
-
-    private static class Node {
-        private Space space;
-        Node next;
-
-        private Node() {
-        }
-
-        public static Node of(Space space) {
-            Node newNode = new Node();
-            if (space instanceof Flat) {
-                newNode.space = new Flat(space.getArea(), space.getNumberOfRooms());
-            } else if (space instanceof Office) {
-                newNode.space = new Office(space.getArea(), space.getNumberOfRooms());
-            }
-            return newNode;
-        }
-
-        public Space getSpace() {
-            return space;
-        }
     }
 
     private void addNode(Node node, int number) {
@@ -229,6 +207,28 @@ public class OfficeFloor implements Floor {
                 temp = temp.next;
             }
             return temp;
+        }
+    }
+
+    private static class Node {
+        Node next;
+        private Space space;
+
+        private Node() {
+        }
+
+        public static Node of(Space space) {
+            Node newNode = new Node();
+            if (space instanceof Flat) {
+                newNode.space = new Flat(space.getArea(), space.getNumberOfRooms());
+            } else if (space instanceof Office) {
+                newNode.space = new Office(space.getArea(), space.getNumberOfRooms());
+            }
+            return newNode;
+        }
+
+        public Space getSpace() {
+            return space;
         }
     }
 }

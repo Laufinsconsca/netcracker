@@ -26,7 +26,7 @@ public class Office implements Space {
         this(area, 1);
     }
 
-    public Office (){
+    public Office() {
         this(DEFAULT_SQUARE, DEFAULT_NUMBER_OF_ROOMS);
     }
 
@@ -55,7 +55,7 @@ public class Office implements Space {
         return new Office(area, numberOfRooms);
     }
 
-    public String toString(){
+    public String toString() {
         return "{" + area + "," + numberOfRooms + "}";
     }
 }

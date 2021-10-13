@@ -1,14 +1,15 @@
 package buildings.impl.array;
 
+import buildings.Building;
 import buildings.Floor;
 import buildings.Space;
-import buildings.Building;
 import exceptions.FloorIndexOutOfBoundsException;
 import exceptions.SpaceIndexOutOfBoundsException;
+
 import static sort.Sort.quickSort;
 
 public class Dwelling implements Building {
-    private Floor[] floors;
+    private final Floor[] floors;
 
     public Dwelling(int numberOfFloors, int... numberOfFlats) {
         if (numberOfFloors != numberOfFlats.length) {
@@ -67,7 +68,7 @@ public class Dwelling implements Building {
     }
 
     @Override
-    public Floor[] toArray() {
+    public Floor[] getFloorsArray() {
         return floors;
     }
 
@@ -188,11 +189,23 @@ public class Dwelling implements Building {
         int i = 0;
         Space[] array = new Space[getNumberOfSpaces()];
         for (Floor floor : floors) {
-            for (Space space : floor.toArray()) {
+            for (Space space : floor.getSpacesArray()) {
                 array[i++] = space.copy();
             }
         }
         quickSort(array, 0, array.length - 1);
         return array;
+    }
+
+    public String toString() {
+        Floor[] floors = getFloorsArray();
+        if (floors.length == 0) {
+            return "Здание пусто";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < getNumberOfFloors(); i++) {
+            builder.append(floors[i]).append("\n");
+        }
+        return builder.toString();
     }
 }

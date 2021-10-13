@@ -24,7 +24,7 @@ public class DwellingFloor implements Floor {
     }
 
     @Override
-    public double getTotalArea(){
+    public double getTotalArea() {
         double totalArea = 0;
         for (Space space : spaces) {
             totalArea += space.getArea();
@@ -33,7 +33,7 @@ public class DwellingFloor implements Floor {
     }
 
     @Override
-    public int getNumberOfRooms(){
+    public int getNumberOfRooms() {
         int totalNumberOfRooms = 0;
         for (Space space : spaces) {
             totalNumberOfRooms += space.getNumberOfRooms();
@@ -42,7 +42,7 @@ public class DwellingFloor implements Floor {
     }
 
     @Override
-    public Space[] toArray() {
+    public Space[] getSpacesArray() {
         return spaces;
     }
 
@@ -101,8 +101,20 @@ public class DwellingFloor implements Floor {
         return maxAreaSpace;
     }
 
+    public String toString() {
+        Space[] flats = getSpacesArray();
+        if (flats.length == 0) {
+            return "Этаж пуст";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < getNumberOfSpaces(); i++) {
+            builder.append(flats[i]).append(" ");
+        }
+        return builder.toString();
+    }
+
     @Override
     public Floor copy() {
-        return new DwellingFloor(toArray());
+        return new DwellingFloor(getSpacesArray());
     }
 }
